@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Movie Series</title>
+<style>
+  body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    text-align: center;
+    padding: 30px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  :root {
+    --bg: #111;
+    --text: #eee;
+    --card: #1c1c1c;
+    --btn-bg: #333;
+    --btn-hover: #00b894;
+  }
+
+  body.light {
+    --bg: #f5f5f5;
+    --text: #111;
+    --card: #fff;
+    --btn-bg: #ddd;
+    --btn-hover: #555;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: auto;
+    background: var(--card);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  }
+
+  h1 {
+    margin-bottom: 10px;
+  }
+
+  iframe {
+    width: 100%;
+    height: 500px;
+    border-radius: 12px;
+    border: none;
+    background: #000;
+  }
+
+  .description {
+    margin-top: 15px;
+    font-size: 1rem;
+  }
+
+  .controls {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  button {
+    background: var(--btn-bg);
+    color: var(--text);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin: 10px;
+  }
+
+  button:hover {
+    background: var(--btn-hover);
+  }
+
+  .episode-nav {
+    margin-top: 20px;
+  }
+
+  .theme-toggle {
+    float: right;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Hi Sadika 😍</h1>
+  <h1 id="episodeTitle">Episode 1</h1>
+
+  <!-- Google Drive video embed -->
+  <iframe id="videoPlayer" 
+          src="https://drive.google.com/file/d/1t2r8JHg2BAgetm-uKnm36g9832feC0dE/preview" 
+          allow="autoplay" allowfullscreen>
+  </iframe>
+
+  <p class="description" id="episodeDescription">
+    In this episode, the story begins with the introduction of the main characters.
+  </p>
+
+  <div class="controls">
+    <button onclick="prevEpisode()">⬅ Previous</button>
+    <button onclick="nextEpisode()">Next ➡</button>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
+  </div>
+
+  <div class="episode-nav" id="episodeButtons"></div>
+</div>
+
+<script>
+const episodes = [
+  {
+    title: "Episode 1",
+    fileId: "1t2r8JHg2BAgetm-uKnm36g9832feC0dE",
+    desc: "In this episode, the story begins with the introduction of the main characters."
+  },
+  // 🧩 Add more episodes below as you upload them to Google Drive:
+  {
+    title: "Episode 2",
+    fileId: "1xUB0CTTonN4UYMsvrAYb3aC2hfy2TBKc",
+    desc: "The adventure continues as new challenges appear."
+  },
+  {
+    title: "Episode 3",
+    fileId: "1jd7WTgWc_Ix0MpbwQZyaO8Ojvhm9wmdi",
+    desc: "The adventure continues as new challenges appear."
+  },
+  {
+    title: "Episode 4",
+    fileId: "1dQVDQfB7Nq7SjWati3kP5fMpG7HFzpSi",
+    desc: "The adventure continues as new challenges appear."
+  },
+  {
+    title: "Episode 5",
+    fileId: "1WlnhI_7Z764Llva3fzS-j6cJdgmgsgvI",
+    desc: "The adventure continues as new challenges appear."
+  },
+];
+
+let current = 0;
+const player = document.getElementById('videoPlayer');
+const title = document.getElementById('episodeTitle');
+const desc = document.getElementById('episodeDescription');
+
+function loadEpisode(index) {
+  current = index;
+  const ep = episodes[index];
+  title.textContent = ep.title;
+  desc.textContent = ep.desc;
+  player.src = `https://drive.google.com/file/d/${ep.fileId}/preview`;
+}
+
+function nextEpisode() {
+  if (current < episodes.length - 1) {
+    loadEpisode(current + 1);
+  } else {
+    alert("You’ve reached the last episode!");
+  }
+}
+
+function prevEpisode() {
+  if (current > 0) {
+    loadEpisode(current - 1);
+  } else {
+    alert("This is the first episode!");
+  }
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("light");
+}
+
+// Create buttons dynamically
+const epButtons = document.getElementById('episodeButtons');
+episodes.forEach((ep, i) => {
+  const btn = document.createElement('button');
+  btn.textContent = `Episode ${i + 1}`;
+  btn.onclick = () => loadEpisode(i);
+  epButtons.appendChild(btn);
+});
+</script>
+
+</body>
+</html>
