@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Movie Series</title>
 <style>
+  /* Base layout */
   body {
     font-family: "Segoe UI", Arial, sans-serif;
     background: var(--bg);
     color: var(--text);
     text-align: center;
-    padding: 30px;
+    padding: 20px;
+    margin: 0;
     transition: background 0.3s, color 0.3s;
   }
 
@@ -34,13 +36,14 @@
     max-width: 900px;
     margin: auto;
     background: var(--card);
-    padding: 25px;
+    padding: 20px;
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(0,0,0,0.4);
   }
 
   h1 {
-    margin-bottom: 10px;
+    margin: 10px 0;
+    font-size: 1.8rem;
   }
 
   iframe {
@@ -54,10 +57,12 @@
   .description {
     margin-top: 15px;
     font-size: 1rem;
+    padding: 0 10px;
+    line-height: 1.5;
   }
 
   .controls {
-    margin-top: 15px;
+    margin-top: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -73,7 +78,7 @@
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.3s;
-    margin: 10px;
+    font-size: 1rem;
   }
 
   button:hover {
@@ -82,10 +87,58 @@
 
   .episode-nav {
     margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
   }
 
   .theme-toggle {
-    float: right;
+    flex: 1;
+    text-align: right;
+  }
+
+  /* 📱 Mobile responsiveness */
+  @media (max-width: 768px) {
+    .container {
+      padding: 15px;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+    }
+
+    iframe {
+      height: 300px;
+    }
+
+    button {
+      width: 30%;
+      padding: 12px;
+      font-size: 1rem;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .description {
+      font-size: 0.95rem;
+    } 
+  }
+
+  @media (max-width: 480px) {
+    iframe {
+      height: 220px;
+    }
+    h1 {
+      font-size: 1.2rem;
+    }
+    .description {
+      font-size: 0.9rem;
+    }
   }
 </style>
 </head>
@@ -108,9 +161,8 @@
   <div class="controls">
     <button onclick="prevEpisode()">⬅ Previous</button>
     <button onclick="nextEpisode()">Next ➡</button>
-    <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
-  </div>
-
+  </div> 
+  <hr>
   <div class="episode-nav" id="episodeButtons"></div>
 </div>
 
@@ -121,7 +173,6 @@ const episodes = [
     fileId: "1t2r8JHg2BAgetm-uKnm36g9832feC0dE",
     desc: "In this episode, the story begins with the introduction of the main characters."
   },
-  // 🧩 Add more episodes below as you upload them to Google Drive:
   {
     title: "Episode 2",
     fileId: "1xUB0CTTonN4UYMsvrAYb3aC2hfy2TBKc",
@@ -130,17 +181,17 @@ const episodes = [
   {
     title: "Episode 3",
     fileId: "1jd7WTgWc_Ix0MpbwQZyaO8Ojvhm9wmdi",
-    desc: "The adventure continues as new challenges appear."
+    desc: "The journey deepens as secrets are revealed."
   },
   {
     title: "Episode 4",
     fileId: "1dQVDQfB7Nq7SjWati3kP5fMpG7HFzpSi",
-    desc: "The adventure continues as new challenges appear."
+    desc: "A dramatic turn pushes the heroes to their limits."
   },
   {
     title: "Episode 5",
     fileId: "1WlnhI_7Z764Llva3fzS-j6cJdgmgsgvI",
-    desc: "The adventure continues as new challenges appear."
+    desc: "The adventure reaches its thrilling conclusion."
   },
 ];
 
@@ -155,6 +206,7 @@ function loadEpisode(index) {
   title.textContent = ep.title;
   desc.textContent = ep.desc;
   player.src = `https://drive.google.com/file/d/${ep.fileId}/preview`;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function nextEpisode() {
@@ -177,7 +229,7 @@ function toggleTheme() {
   document.body.classList.toggle("light");
 }
 
-// Create buttons dynamically
+// Create episode buttons dynamically
 const epButtons = document.getElementById('episodeButtons');
 episodes.forEach((ep, i) => {
   const btn = document.createElement('button');
