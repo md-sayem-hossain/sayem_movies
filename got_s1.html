@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Movie Series</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  
+</style>
+</head>
+<body>
+
+<nav>
+  <h1>🎬 Sayem's Series</h1>
+  <div class="nav-right">
+    <a href="index.html" style="color: white;text-decoration: none;font-weight: bold;margin-right: 1em;">Home</a>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+  </div>
+</nav>
+
+<div class="container"> 
+  <h1 id="episodeTitle">S01 E01 · Winter Is Coming</h1>
+
+  <!-- Google Drive video embed -->
+  <iframe id="videoPlayer" 
+          src="https://drive.google.com/file/d/1t2r8JHg2BAgetm-uKnm36g9832feC0dE/preview" 
+          allow="autoplay" allowfullscreen>
+  </iframe>
+
+  <p class="description" id="episodeDescription">
+    A Night's Watch deserter is tracked down; Lord Eddard 'Ned' Stark learns that his mentor has died; Viserys Targaryen plots to win back the throne; Robert arrives at Winterfell with his family; Ned prepares to leave for King's Landing.
+  </p>
+
+  <div class="controls">
+    <button onclick="prevEpisode()">⬅ Previous</button>
+    <button onclick="nextEpisode()">Next ➡</button>
+  </div> 
+  <hr>
+  <div class="episode-nav" id="episodeButtons"></div>
+</div>
+
+<script>
+const episodes = [
+  {
+    title: "S01 E01 · Winter Is Coming",
+    fileId: "1t2r8JHg2BAgetm-uKnm36g9832feC0dE",
+    desc: "A Night's Watch deserter is tracked down; Lord Eddard 'Ned' Stark learns that his mentor has died; Viserys Targaryen plots to win back the throne; Robert arrives at Winterfell with his family; Ned prepares to leave for King's Landing."
+  },
+  {
+    title: "S01 E02 · The Kingsroad",
+    fileId: "1xUB0CTTonN4UYMsvrAYb3aC2hfy2TBKc",
+    desc: "FREE 'The Kingsroad.' (Season One) The Lannisters plot to ensure Bran's silence; Ned faces a family crisis en route to King's Landing. Ends 09/04. Don't have HBO Max? Go to Channel 2495 and upgrade instantly."
+  },
+  {
+    title: "S01 E03 · Lord Snow",
+    fileId: "1jd7WTgWc_Ix0MpbwQZyaO8Ojvhm9wmdi",
+    desc: "Lord Ned Stark arrives at King's Landing, and before he can shake off the dust of the road, his presence is requested by the Small Council. On his way through the Red Keep, Ned sees Sir Jaime Lannister standing by the Iron Throne. The two men exchange barbs, and then Jaime recounts the day that the Mad King Aerys murdered Ned's father and brother in the throne room."
+  },
+  {
+    title: "S01 E04 · Cripples, Bastards and Broken Things",
+    fileId: "1dQVDQfB7Nq7SjWati3kP5fMpG7HFzpSi",
+    desc: "A raven flies through the gates of Winterfell, swooping past Bran Stark, who's standing in the courtyard practising his archery. He walks after the bird, and when he catches up to it, sees that the raven has three eyes. Bran wakens from the dream and finds himself in bed with his wolf Summer, still unable to walk. Theon Greyjoy enters the room with Hodor, a large and simpleminded stable boy, who carries Bran downstairs."
+  },
+  {
+    title: "S01 E05 · The Wolf and the Lion",
+    fileId: "1WlnhI_7Z764Llva3fzS-j6cJdgmgsgvI",
+    desc: "The Silent Sisters perform rites over Ser Hugh of the Vale's corpse and stitch up the throat wound that killed the young knight. Lord Ned Stark and Ser Barristan Selmy look on, discussing how Ser Hugh recently was raised to knighthood and received enough money to buy some fine new armour. Ned is also suspicious of how the knight came to be matched up against Ser Gregor Clegane, known as The Mountain, in the tourney."
+  },
+  {
+    title: "S01 E06 · A Golden Crown",
+    fileId: "1vWtdddQp_lg7nnv15f6j5iTbF0mqL3Fo",
+    desc: "FREE 'A Golden Crown.' (Season One) Ned makes a controversial decree; Tyrion confesses to his crimes; Viserys gets final payment for Daenerys. Ends 09/04. Don't have HBO Max? Go to Channel 2495 and upgrade instantly."
+  },
+  {
+    title: "S01 E07 · You Win or You Die",
+    fileId: "1WGGhbDGDY6m50hdklYWk9MGkqw4mcTbD",
+    desc: "At his family's war camp, Lord Tywin Lannister butchers a stag and discusses their house's situation with his son Jaime Lannister, who reads Lord Ned Stark's order for Tywin to appear at court. The patriarch reprimands his son for attacking Ned in the streets and explains how important it is to free Tyrion from the Eyrie: `Every day that he remains a prisoner, the less our name commands respect'."
+  },
+  {
+    title: "S01 E08 · The Pointy End",
+    fileId: "17EEKQCg6a2_NrQLtvZOEfOObyafgiM7l",
+    desc: "FREE 'The Pointy End.'' (Season One) The Lannisters press their advantage over the Starks; Robb rallies his father's northern allies. Ends 09/04. Don't have HBO Max? Go to Channel 2495 and upgrade instantly."
+  },
+  {
+    title: "S01 E09 · Baelor",
+    fileId: "1MComasLddvyPiSDAvKOahWxGFdDCiy-i",
+    desc: "FREE 'Baelor.' (Season One) Ned makes a fateful decision; Robb takes a prized prisoner; Dany finds her reign imperiled. Ends 09/04. Don't have HBO Max? Go to Channel 2495 and upgrade instantly."
+  },
+  {
+    title: "S01 E10 · Fire and Blood",
+    fileId: "12me8Dtyji-U0U6fqY3vuoH8ktOdGv_E9",
+    desc: "Robb vows to get revenge on the Lannisters and Jon must officially decide if his place is with Robb or the Night's Watch. Meanwhile, Daenerys says her final goodbye to Drogo."
+  },
+  
+];
+
+let current = 0;
+const player = document.getElementById('videoPlayer');
+const title = document.getElementById('episodeTitle');
+const desc = document.getElementById('episodeDescription');
+
+function loadEpisode(index) {
+  current = index;
+  const ep = episodes[index];
+  title.textContent = ep.title;
+  desc.textContent = ep.desc;
+  player.src = `https://drive.google.com/file/d/${ep.fileId}/preview`;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextEpisode() {
+  if (current < episodes.length - 1) {
+    loadEpisode(current + 1);
+  } else {
+    alert("You’ve reached the last episode!");
+  }
+}
+
+function prevEpisode() {
+  if (current > 0) {
+    loadEpisode(current - 1);
+  } else {
+    alert("This is the first episode!");
+  }
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("light");
+}
+
+// Create episode buttons dynamically
+const epButtons = document.getElementById('episodeButtons');
+episodes.forEach((ep, i) => {
+  const btn = document.createElement('button');
+  btn.textContent = `Episode ${i + 1}`;
+  btn.onclick = () => loadEpisode(i);
+  epButtons.appendChild(btn);
+});
+</script>
+
+</body>
+</html>
